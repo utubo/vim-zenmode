@@ -46,7 +46,7 @@ Example
 vim9script
 g:zenmode = {
   delay: 3,
-  horiz: '-',
+  horiz: '═',
 }
 ```
 
