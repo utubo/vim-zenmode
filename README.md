@@ -38,5 +38,15 @@ vim-zenmode is a Vim plugin emulates the next line with `echo` when statusline i
   0: no delay.  
   n(< 0): show the next line on cursor moved.
 - `horiz`  
-  the char of the horizontal line.
+  the char of the horizontal line.  
+  default is `-`
+
+Example
+```vim
+vim9script
+g:zenmode = {
+  delay: 3,
+  horiz: '-',
+}
+```
 
