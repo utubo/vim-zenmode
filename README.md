@@ -17,7 +17,7 @@ vim-zenmode is a Vim plugin emulates the next line with `echo` when statusline i
   ```vim
   vim9script
   ⋮
-  dein# add('utubo/vim-zenmode')
+  dein#add('utubo/vim-zenmode')
   ⋮
   set statusline = 0
   # toggle Zen-Mode
