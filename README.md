@@ -21,13 +21,20 @@ vim-zenmode is a Vim plugin emulates the next line with `echo` when statusline i
   ⋮
   set statusline = 0
   # toggle Zen-Mode
-  nnoremap ZZ <Cmd>let &laststatus = !&laststatus ? 2 : 0<CR>
+  nnoremap ZZ <Cmd>call zenmode#Toggle()<CR>
   ```
 
+## FUNCTIONS
+- `zenmode#Enable(): bool`
+  Enable zenmode and return true.
+- `zenmode#Disable(): bool`
+  Disable zenmode and return true.
+- `zenmode#Toggle(): bool`
+  Toggle zenmode and return true when zenmode is enabeld.
 
 ## VARIABLES
 
-### `g:zenmode`
+###`g:zenmode`
 `g:zenmode` is dictionaly.  
 
 - `delay`  
@@ -49,4 +56,9 @@ g:zenmode = {
   horiz: '═',
 }
 ```
+
+## COLORS
+- `ZenmodeHoriz`
+  Horizontal line.
+  default is link to VertSplit
 

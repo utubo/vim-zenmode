@@ -26,7 +26,9 @@ CONTENTS						*zenmode-contents*
 
 INTRODUCTION			|zenmode-introduction|
 USAGE				|zenmode-usage|
+FUNCTIONS			zenmode-functions
 VARIABLES			|zenmode-variables|
+COLORS				zenmode-colors
 
 
 ==============================================================================
@@ -59,6 +61,14 @@ Install
 
 
 ==============================================================================
+FUNCTIONS						*zenmode-functions*
+`zenmode#Enable(): bool` 	Enable zenmode and return true.
+`zenmode#Disable(): bool` 	Disable zenmode and return true.
+`zenmode#Toggle(): bool` 	Toggle zenmode and return true when
+				zenmode is enabeld.
+
+
+==============================================================================
 VARIABLES						*zenmode-variables*
 
 g:zenmode						*g:zenmode*
@@ -71,6 +81,14 @@ g:zenmode						*g:zenmode*
 				n(< 0): show the next line on cursor moved.
 				default is `'-1'`.
 		`horiz`		the char of the horizontal line on.
+
+
+
+==============================================================================
+COLORS							*zenmode-colors*
+- `ZenmodeHoriz`
+  Horizontal line.
+  default is link to VertSplit
 
 
 ==============================================================================

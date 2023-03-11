@@ -7,7 +7,7 @@ vim9script
 var enable = false
 var listchars = { tab: '  ', extends: '' }
 var vertchar = '|'
-const zen_horizline = '%#CmdHeight0Horiz#%{zenmode#HorizLine()}'
+const zen_horizline = '%#ZenmodeHoriz#%{zenmode#HorizLine()}'
 var statusline_bkup = &statusline
 b:zenmode_teminal = false
 
@@ -97,7 +97,7 @@ export def Init()
     nnoremap <script> <silent> N N
   endif
   g:zenmode.initialized = 1
-  Update()
+  Enable()
 enddef
 
 # Scroll event
@@ -143,15 +143,16 @@ enddef
 def SetupZen()
   const before = enable
   enable = &laststatus ==# 0 || &laststatus ==# 1 && winnr('$') ==# 1
-  if !enable
-    TurnDown(before)
-    return
+  if before ==# enable
+    # nop
+  elseif enable
+    ZenEnter()
+  else
+    ZenLeave()
   endif
-  # setup horizontal line
-  if &statusline !=# zen_horizline
-    statusline_bkup = &statusline
-    &statusline = zen_horizline
-  endif
+enddef
+
+def ZenEnter()
   # cache &listchars, &fillchars
   listchars = { tab: '  ', extends: '' }
   for kv in split(&listchars, ',')
@@ -160,17 +161,20 @@ def SetupZen()
   endfor
   const p = &fillchars->stridx('vert:')
   vertchar = p !=# -1 ? &fillchars[p + 5] : '|'
+  # setup horizontal line
+  if &statusline !=# zen_horizline
+    statusline_bkup = &statusline
+    &statusline = zen_horizline
+  endif
 enddef
 
-def TurnDown(before: bool)
-  enable = false
+def ZenLeave()
   if &statusline ==# zen_horizline
     &statusline = statusline_bkup
   endif
-  if before
-    redraw!
-    echo ""
-  endif
+  redraw!
+  echo ""
+  redrawstatus
 enddef
 
 def EchoNextLine(timer: any = 0, opt: any = { redraw: false })
@@ -307,17 +311,14 @@ def Update()
   endif
   b:zenmode_teminal = mode() ==# 't'
   g:zenmode.winupdated = 1
+  silent! hi default link ZenmodeHoriz VertSplit
   SaveWinSize()
   SetupZen()
   EchoNextLine(0, { redraw: true })
   redrawstatus # This flicks the screen on gvim.
 enddef
 
-# --------------------
-# API
-# --------------------
-
-export def Invalidate(timer: any = 0)
+def Invalidate(timer: any = 0)
   augroup zenmode_invalidate
     au!
     au SafeState * ++once Silent(Update)
@@ -327,5 +328,30 @@ enddef
 export def HorizLine(): string
   const width = winwidth(0)
   return printf($"%.{width}S", repeat(g:zenmode.horiz, width))
+enddef
+
+# --------------------
+# API
+# --------------------
+
+export def Enable(): bool
+  silent! lightline#disable()
+  &laststatus = 0
+  ZenEnter() # for lightline
+  return true
+enddef
+
+export def Disable(): bool
+  silent! lightline#enable()
+  &laststatus = 2
+  return false
+enddef
+
+export def Toggle(): bool
+  if &laststatus !=# 0
+    return Enable()
+  else
+    return Disable()
+  endif
 enddef
 
