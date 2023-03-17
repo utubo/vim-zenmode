@@ -69,6 +69,7 @@ export def Init()
   g:zenmode = {
     horiz: '-',
     delay: -1,
+    exclude: ['ControlP'],
   }
   g:zenmode->extend(override)
   set noruler
@@ -180,6 +181,9 @@ enddef
 def EchoNextLine(timer: any = 0, opt: any = { redraw: false })
   # Setup
   if !enable
+    return
+  endif
+  if g:zenmode.exclude->index(bufname('%')) !=# -1
     return
   endif
   const m = mode()[0]

@@ -81,7 +81,9 @@ g:zenmode						*g:zenmode*
 				n(< 0): show the next line on cursor moved.
 				default is `'-1'`.
 		`horiz`		the char of the horizontal line on.
-
+		`exclude`	list<string>.
+				the exclude bufnames.
+				default is `['ControlP']`.
 
 
 ==============================================================================

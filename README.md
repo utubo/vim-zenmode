@@ -47,6 +47,9 @@ vim-zenmode is a Vim plugin emulates the next line with `echo` when statusline i
 - `horiz`  
   the char of the horizontal line.  
   default is `-`
+- `exclude`  
+  the exclude bufnames.
+  default is `['ControlP']`.
 
 Example
 ```vim
