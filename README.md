@@ -46,10 +46,13 @@ vim-zenmode is a Vim plugin emulates the next line with `echo` when statusline i
   `n(< 0)`: show the next line on cursor moved.
 - `horiz`  
   the char of the horizontal line.  
-  default is `-`
+  default is empty.
 - `exclude`  
   the exclude bufnames.
   default is `['ControlP']`.
+- `preventEcho`  
+  Prevent to echo the next line.  
+  (for echo you want.)
 
 Example
 ```vim
@@ -63,5 +66,5 @@ g:zenmode = {
 ## COLORS
 - `ZenmodeHoriz`
   Horizontal line.
-  default is link to VertSplit
+  default is Strikeouted NonText
 

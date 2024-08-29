@@ -63,7 +63,7 @@ Install
 ==============================================================================
 FUNCTIONS						*zenmode-functions*
 `zenmode#Enable(): bool` 	Enable zenmode and return true.
-`zenmode#Disable(): bool` 	Disable zenmode and return true.
+`zenmode#Disable(): bool` 	Disable zenmode and return false.
 `zenmode#Toggle(): bool` 	Toggle zenmode and return true when
 				zenmode is enabeld.
 
@@ -81,16 +81,20 @@ g:zenmode						*g:zenmode*
 				n(< 0): show the next line on cursor moved.
 				default is `'-1'`.
 		`horiz`		the char of the horizontal line on.
+				default is empty.
 		`exclude`	list<string>.
 				the exclude bufnames.
 				default is `['ControlP']`.
+		`preventEcho`	bool
+				Prevent to echo the next line.
+				(for echo you want.)
 
 
 ==============================================================================
 COLORS							*zenmode-colors*
 - `ZenmodeHoriz`
   Horizontal line.
-  default is link to VertSplit
+  default is Strikeouted NonText
 
 
 ==============================================================================

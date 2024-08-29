@@ -5,6 +5,7 @@ vim9script
 # --------------------
 
 var enable = false
+var winupdated = 1
 var listchars = { tab: '  ', extends: '' }
 var vertchar = '|'
 const zen_horizline = '%#ZenmodeHoriz#%{zenmode#HorizLine()}'
@@ -52,7 +53,7 @@ enddef
 
 def UpdateBottomWinIds()
   bottomWinIds = GetBottomWinIds(winlayout())
-  g:zenmode.winupdated = 0
+  winupdated = 0
 enddef
 
 # others
@@ -67,9 +68,10 @@ enddef
 export def Init()
   const override = get(g:, 'zenmode', {})
   g:zenmode = {
-    horiz: '-',
+    horiz: '',
     delay: -1,
     exclude: ['ControlP'],
+    preventEcho: false,
   }
   g:zenmode->extend(override)
   set noruler
@@ -77,8 +79,9 @@ export def Init()
   set laststatus=0
   augroup zenmode
     au!
+    au ColorScheme * SetUpColor()
     au ColorScheme * Silent(Invalidate)
-    au WinNew,WinClosed,TabLeave * g:zenmode.winupdated = 1
+    au WinNew,WinClosed,TabLeave * winupdated = 1
     au WinEnter * Silent(Update)|SaveWinSize() # for check scroll
     au WinLeave * Silent(Invalidate)
     au WinScrolled * Silent(OnSizeChangedOrScrolled)
@@ -97,8 +100,10 @@ export def Init()
   if maparg('N', 'n')->empty()
     nnoremap <script> <silent> N N
   endif
-  g:zenmode.initialized = 1
+  SetupColor()
   Enable()
+  g:zenmode.initialized = 1
+  timer_start(g:zenmode.delay, 'zenmode#Invalidate')
 enddef
 
 # Scroll event
@@ -135,6 +140,29 @@ def OverwriteEchoWithDelay()
   if enable && 0 <= g:zenmode.delay
     timer_start(g:zenmode.delay, 'zenmode#Invalidate')
   endif
+enddef
+
+def GetFgBg(name: string): any
+  var rv = name[0] ==# '!'
+  const nm = rv ? name[1 : ] : name
+  const id = hlID(nm)->synIDtrans()
+  var fg = NVL(synIDattr(id, 'fg#'), 'NONE')
+  var bg = NVL(synIDattr(id, 'bg#'), 'NONE')
+  if synIDattr(id, 'reverse') ==# '1'
+    rv = !rv
+  endif
+  if rv
+    return { fg: bg, bg: fg }
+  else
+    return { fg: fg, bg: bg }
+  endif
+enddef
+
+def SetupColor()
+  const x = has('gui') ? 'gui' : 'cterm'
+  const id = hlID('NonText')->synIDtrans()
+  var fg = NVL(synIDattr(id, 'fg#'), 'NONE')
+  execute $'hi default ZenmodeHoriz {x}=strikethrough {x}fg={fg}'
 enddef
 
 # --------------------
@@ -180,7 +208,7 @@ enddef
 
 def EchoNextLine(timer: any = 0, opt: any = { redraw: false })
   # Setup
-  if !enable
+  if !enable || g:zenmode.preventEcho
     return
   endif
   if g:zenmode.exclude->index(bufname('%')) !=# -1
@@ -190,7 +218,7 @@ def EchoNextLine(timer: any = 0, opt: any = { redraw: false })
   if m ==# 'c' || m ==# 'r'
     return
   endif
-  if g:zenmode.winupdated ==# 1
+  if winupdated ==# 1
     UpdateBottomWinIds()
   endif
   if opt.redraw
@@ -314,7 +342,7 @@ def Update()
     return
   endif
   b:zenmode_teminal = mode() ==# 't'
-  g:zenmode.winupdated = 1
+  winupdated = 1
   silent! hi default link ZenmodeHoriz VertSplit
   SaveWinSize()
   SetupZen()
@@ -322,7 +350,11 @@ def Update()
   redrawstatus # This flicks the screen on gvim.
 enddef
 
-def Invalidate(timer: any = 0)
+# --------------------
+# API
+# --------------------
+
+export def Invalidate(timer: any = 0)
   augroup zenmode_invalidate
     au!
     au SafeState * ++once Silent(Update)
@@ -333,10 +365,6 @@ export def HorizLine(): string
   const width = winwidth(0)
   return printf($"%.{width}S", repeat(g:zenmode.horiz, width))
 enddef
-
-# --------------------
-# API
-# --------------------
 
 export def Enable(): bool
   silent! lightline#disable()
