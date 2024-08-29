@@ -253,7 +253,6 @@ def EchoNextLineWin(winid: number)
     echon repeat(' ', width)
     return
   endif
-  # TODO: The line is dolubled when botline is wrapped.
   var linenr = line('w$', winid)
   const fce = WinGetLn(winid, linenr, 'foldclosedend')
   if fce !=# '-1'
@@ -303,6 +302,15 @@ def EchoNextLineWin(winid: number)
   const ts = getwinvar(winnr, '&tabstop')
   const expandtab = listchars.tab[0] .. repeat(listchars.tab[1], ts)
   var text = NVL(getbufline(winbufnr(winnr), linenr), [''])[0]
+  # wrapped
+  # TODO: The line is dolubled when botline is wrapped.
+  if getwinvar(winnr, '&wrap') && width < strdisplaywidth(text)
+    echoh EndOfBuffer
+    echon repeat(NVL(matchstr(&fcs, '\(lastline:\)\@<=.'), '@'), width)
+    echoh Normal
+    return
+  endif
+  # show text
   var i = 1
   var v = 0
   win_execute(winid, $'call zenmode#GetHiNames({linenr})')
