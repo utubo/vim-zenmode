@@ -79,7 +79,7 @@ export def Init()
   set laststatus=0
   augroup zenmode
     au!
-    au ColorScheme * SetUpColor()
+    au ColorScheme * SetupColor()
     au ColorScheme * Silent(Invalidate)
     au WinNew,WinClosed,TabLeave * winupdated = 1
     au WinEnter * Silent(Update)|SaveWinSize() # for check scroll
