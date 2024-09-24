@@ -10,6 +10,9 @@ var listchars = { tab: '  ', extends: '' }
 var vertchar = '|'
 const zen_horizline = '%#ZenmodeHoriz#%{zenmode#HorizLine()}'
 var statusline_bkup = &statusline
+var converted_hl = {}
+var normal_fg = ''
+var normal_bg = ''
 b:zenmode_teminal = false
 
 # --------------------
@@ -160,8 +163,15 @@ enddef
 
 def SetupColor()
   const x = has('gui') ? 'gui' : 'cterm'
+  # prevent to link Normal to MsgArea
+  const normal_id = hlID('Normal')->synIDtrans()
+  normal_fg = NVL(synIDattr(normal_id, 'fg#'), 'NONE')
+  normal_bg = NVL(synIDattr(normal_id, 'bg#'), 'NONE')
+  execute $'hi ZenNormal {x}fg={normal_fg} {x}bg={normal_bg}'
+  converted_hl = { 'Normal': 'ZenNormal' }
+  # horizontal line
   const id = hlID('NonText')->synIDtrans()
-  var fg = NVL(synIDattr(id, 'fg#'), 'NONE')
+  const fg = NVL(synIDattr(id, 'fg#'), 'NONE')
   execute $'hi default ZenmodeHoriz {x}=strikethrough {x}fg={fg}'
 enddef
 
@@ -314,6 +324,7 @@ def EchoNextLineWin(winid: number)
   var i = 1
   var v = 0
   win_execute(winid, $'call zenmode#GetHiNames({linenr})')
+  echoh ZenNormal
   for c in split(text, '\zs')
     var vc = c
     if vc ==# "\t"
@@ -337,8 +348,9 @@ def EchoNextLineWin(winid: number)
     i += len(c)
     v += vw
   endfor
-  echoh Normal
+  echoh ZenNormal
   echon repeat(' ', width - v)
+  echoh Normal
 enddef
 
 def WinGetLn(winid: number, linenr: number, com: string): string
@@ -347,10 +359,22 @@ enddef
 
 var hi_names = []
 export def GetHiNames(l: number)
-  hi_names = ['Normal']
+  hi_names = ['ZenNormal']
   for c in range(1, getline(l)->printf($'%+{winwidth(0)}S')->len())
-    hi_names += [synID(l, c, 1)->synIDattr('name') ?? 'Normal']
+    const name = synID(l, c, 1)->synIDattr('name')
+    if ! converted_hl->has_key(name)
+      const id = hlID('Normal')->synIDtrans()
+      const fg = NVL(synIDattr(id, 'fg#'), 'NONE')
+      const bg = NVL(synIDattr(id, 'bg#'), 'NONE')
+      if fg ==# normal_fg && bg ==# normal_bg
+        converted_hl[name] = 'ZenNormal'
+      else
+        converted_hl[name] = name
+      endif
+    endif
+    hi_names += [converted_hl[name]]
   endfor
+  g:hi_names = hi_names
 enddef
 
 def Update()
