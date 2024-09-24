@@ -324,8 +324,8 @@ def EchoNextLineWin(winid: number)
   var i = 1
   var v = 0
   win_execute(winid, $'call zenmode#GetHiNames({linenr})')
-  echoh ZenNormal
   for c in split(text, '\zs')
+    echoh ZenNormal
     var vc = c
     if vc ==# "\t"
       echoh SpecialKey
@@ -363,9 +363,9 @@ export def GetHiNames(l: number)
   for c in range(1, getline(l)->printf($'%+{winwidth(0)}S')->len())
     const name = synID(l, c, 1)->synIDattr('name')
     if ! converted_hl->has_key(name)
-      const id = hlID('Normal')->synIDtrans()
-      const fg = NVL(synIDattr(id, 'fg#'), 'NONE')
-      const bg = NVL(synIDattr(id, 'bg#'), 'NONE')
+      const id = hlID(name)->synIDtrans()
+      const fg = NVL(synIDattr(id, 'fg#'), normal_fg)
+      const bg = NVL(synIDattr(id, 'bg#'), normal_bg)
       if fg ==# normal_fg && bg ==# normal_bg
         converted_hl[name] = 'ZenNormal'
       else
