@@ -387,7 +387,7 @@ def Update()
   silent! hi default link ZenmodeHoriz VertSplit
   SaveWinSize()
   SetupZen()
-  EchoNextLine(0, { redraw: true })
+  EchoNextLine(0, { redraw: has('gui') })
   redrawstatus # This flicks the screen on gvim.
 enddef
 
