@@ -6,8 +6,12 @@ def AtStart()
   endif
 enddef
 
-augroup zenmode_atstart
-  au!
-  au VimEnter * AtStart()
-augroup END
+if has('vim_starting')
+  augroup zenmode_atstart
+    au!
+    au VimEnter * AtStart()
+  augroup END
+else
+  AtStart()
+endif
 
