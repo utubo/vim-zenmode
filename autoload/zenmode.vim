@@ -119,7 +119,7 @@ def OnSizeChangedOrScrolled()
     return
   endif
   const new_wsize = [winwidth(0), winheight(0)]
-  if w:zenmode_wsize ==# new_wsize
+  if get(w:, 'zenmode_wsize', []) ==# new_wsize
     timer_start(0, EchoNextLine)
   else
     w:zenmode_wsize = new_wsize
