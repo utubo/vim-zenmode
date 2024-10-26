@@ -85,13 +85,13 @@ export def Init()
     au ColorScheme * SetupColor()
     au ColorScheme * Silent(Invalidate)
     au WinNew,WinClosed,TabLeave * winupdated = 1
-    au WinEnter * Silent(Update)|SaveWinSize() # for check scroll
+    au WinEnter * Silent(RedrawNow)|SaveWinSize() # for check scroll
     au WinLeave * Silent(Invalidate)
     au WinScrolled * Silent(OnSizeChangedOrScrolled)
     au ModeChanged [^c]:[^t] Silent(Invalidate)
     au ModeChanged c:* Silent(OverwriteEchoWithDelay)
-    au ModeChanged t:* b:zenmode_teminal = false|Silent(Update)
-    au ModeChanged *:t b:zenmode_teminal = true|Silent(Update)
+    au ModeChanged t:* b:zenmode_teminal = false|Silent(RedrawNow)
+    au ModeChanged *:t b:zenmode_teminal = true|Silent(RedrawNow)
     au TabEnter * Silent(Invalidate)
     au OptionSet laststatus,fillchars,number,relativenumber,signcolumn Silent(Invalidate)
     au CursorMoved * Silent(CursorMoved)
@@ -123,7 +123,7 @@ def OnSizeChangedOrScrolled()
     timer_start(0, EchoNextLine)
   else
     w:zenmode_wsize = new_wsize
-    Update()
+    RedrawNow()
   endif
   # prevent flickering
   augroup zenmode_invalidate
@@ -377,7 +377,11 @@ export def GetHiNames(l: number)
   g:hi_names = hi_names
 enddef
 
-def Update()
+# --------------------
+# API
+# --------------------
+
+export def RedrawNow()
   if get(g:zenmode, 'initialized', 0) ==# 0
     Init()
     return
@@ -391,14 +395,10 @@ def Update()
   redrawstatus # This flicks the screen on gvim.
 enddef
 
-# --------------------
-# API
-# --------------------
-
 export def Invalidate(timer: any = 0)
   augroup zenmode_invalidate
     au!
-    au SafeState * ++once Silent(Update)
+    au SafeState * ++once Silent(RedrawNow)
   augroup END
 enddef
 
