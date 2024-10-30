@@ -94,7 +94,8 @@ export def Init()
     au ModeChanged t:* b:zenmode_teminal = false|Silent(RedrawNow)
     au ModeChanged *:t b:zenmode_teminal = true|Silent(RedrawNow)
     au TabEnter * Silent(Invalidate)
-    au OptionSet laststatus,fillchars,number,relativenumber,signcolumn Silent(Invalidate)
+    au OptionSet number,relativenumber,signcolumn CheckTextoff()
+    au OptionSet laststatus,fillchars Silent(Invalidate)
     au CursorMoved * Silent(CursorMoved)
   augroup END
   # prevent to echo search word
@@ -108,7 +109,7 @@ export def Init()
   Enable()
   g:zenmode.initialized = 1
   if 0 < g:zenmode.refreshInterval
-    refresh_timer = timer_start(g:zenmode.refreshInterval, CheckTextoff, { repeat: -1 })
+    refresh_timer = timer_start(g:zenmode.refreshInterval, RegularRefresh, { repeat: -1 })
   endif
   RedrawNow()
 enddef
@@ -180,7 +181,6 @@ def SetupColor()
 enddef
 
 var textoff_bk = 0
-var foldclosed_bk = 0
 def CheckTextoff(t: number = 0)
   if !bottomWinIds
     return
@@ -195,11 +195,23 @@ def CheckTextoff(t: number = 0)
     RedrawNow()
     return
   endif
+enddef
+
+var foldclosed_bk = 0
+def CheckFoldClosed()
+  if !bottomWinIds
+    return
+  endif
   const f = foldclosed('.')
   if f !=# foldclosed_bk
     foldclosed_bk = f
     RedrawNow()
   endif
+enddef
+
+def RegularRefresh(t: number = 0)
+  CheckTextoff()
+  CheckFoldClosed()
 enddef
 
 # --------------------
