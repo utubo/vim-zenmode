@@ -180,6 +180,7 @@ def SetupColor()
 enddef
 
 var textoff_bk = 0
+var foldclosed_bk = 0
 def CheckTextoff(t: number = 0)
   if !bottomWinIds
     return
@@ -191,6 +192,12 @@ def CheckTextoff(t: number = 0)
   const b = a[0].textoff
   if b !=# textoff_bk
     textoff_bk = b
+    RedrawNow()
+    return
+  endif
+  const f = foldclosed('.')
+  if f !=# foldclosed_bk
+    foldclosed_bk = f
     RedrawNow()
   endif
 enddef
