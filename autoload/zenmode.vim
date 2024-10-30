@@ -30,9 +30,11 @@ def Silent(F: func)
     g:zenmode = get(g:, 'zenmode', {})
     g:zenmode.lasterror = v:exception
     g:zenmode.initialized = 0
-    echoe 'vim-zenmode was stopped for safety. ' ..
-      'You can `:call zenmode#Init()` to restart. ' ..
-      $'Exception:{v:exception}'
+    echoh ErrorMsg
+    echom 'vim-zenmode was stopped for safety.'
+    echom '  You can `:call zenmode#Init()` to restart.'
+    echom $'  Exception: {v:exception}'
+    echoh Normal
     throw v:exception
   endtry
 enddef
