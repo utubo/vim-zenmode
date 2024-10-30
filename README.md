@@ -42,8 +42,8 @@ vim-zenmode is a Vim plugin emulates the next line with `echo` when statusline i
   millseconds of show the next line when return from Command-mode.  
   `n(> 0)`: delay n seconds.  
   `0`: no delay.  
-  `-1`: show the next line on cursor moved.
-  default is `-1`.  
+  `-1`: show the next line on cursor moved.  
+  default is `-1`.
 - `horiz`  
   the char of the horizontal line.  
   default is empty.
