@@ -73,34 +73,34 @@ VARIABLES						*zenmode-variables*
 
 g:zenmode						*g:zenmode*
 	`g:zenmode` is dictionaly.
-		`delay`		number.
-				the millseconds of show the next line when
+		`delay`		number  (default `-1`)
+				The millseconds of show the next line when
 				return from Command-mode.
-				n(> 0): delay n seconds.
-				0: no delay.
-				-1: show the next line on cursor moved.
-				default is `-1`.
-		`horiz`		the char of the horizontal line on.
-				default is empty.
-		`exclude`	list<string>.
-				the exclude bufnames.
-				default is `['ControlP']`.
-		`refeshInteval`	number
+				`n(> 0)`: Delay n seconds.
+				`0`: No delay.
+				`-1`: Show the next line on cursor moved.
+
+		`horiz`		string  (default empty)
+				The char of the horizontal line on.
+
+		`exclude`	list<string>  (default  `['ControlP']`)
+				The exclude bufnames.
+
+		`refeshInteval`	number  (default `100`)
 				the millseconds of a timer to refresh without
 				autocmd. e.g. on textoff is changed.
 				`-1` means disable the timer.
-				default is `100`.
-		(deprecated)
-		`preventEcho`	bool
+
+	Deprecated
+		`preventEcho`	bool  (default `false`)
 				Prevent to echo the next line.
 				(for echo you want.)
 
 
 ==============================================================================
 COLORS							*zenmode-colors*
-- `ZenmodeHoriz`
+- `ZenmodeHoriz` (default Strikeouted NonText)
   Horizontal line.
-  default is Strikeouted NonText
 
 
 ==============================================================================
