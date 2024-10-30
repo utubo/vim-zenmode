@@ -52,7 +52,7 @@ vim-zenmode is a Vim plugin emulates the next line with `echo` when statusline i
   the millseconds of a timer to refresh without
   autocmd. e.g. on textoff is changed.
   `-1` means disable regular refreshs.
-- `preventEcho`  (deprecated, default false)  
+- `preventEcho`  (deprecated, default `false`)  
   Prevent to echo the next line.  
   (for echo you want.)
 
@@ -66,6 +66,6 @@ g:zenmode = {
 ```
 
 ## COLORS
-- `ZenmodeHoriz`  (default Strikeouted NonText)
+- `ZenmodeHoriz`  (default Strikeouted NonText)  
   Horizontal line.
 
