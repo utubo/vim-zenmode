@@ -34,7 +34,7 @@ vim-zenmode is a Vim plugin emulates the next line with `echo` when statusline i
 
 ## VARIABLES
 
-###`g:zenmode`
+### `g:zenmode`
 `g:zenmode` is dictionaly.  
 
 - `delay`  
