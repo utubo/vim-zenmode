@@ -26,9 +26,9 @@ CONTENTS						*zenmode-contents*
 
 INTRODUCTION			|zenmode-introduction|
 USAGE				|zenmode-usage|
-FUNCTIONS			zenmode-functions
+FUNCTIONS			|zenmode-functions|
 VARIABLES			|zenmode-variables|
-COLORS				zenmode-colors
+COLORS				|zenmode-colors|
 
 
 ==============================================================================
