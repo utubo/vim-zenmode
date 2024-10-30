@@ -52,10 +52,11 @@ vim-zenmode is a Vim plugin emulates the next line with `echo` when statusline i
   default is `['ControlP']`.
 - `refeshInteval`
   number  
-  the millseconds of refresh the next line.
+  the millseconds of a timer to refresh without
+  autocmd. e.g. on textoff is changed.
   `-1` means disable regular refreshs.
   default is `100`.
-- `preventEcho`  
+- `preventEcho`(deprecated)  
   Prevent to echo the next line.  
   (for echo you want.)
 

@@ -74,8 +74,8 @@ VARIABLES						*zenmode-variables*
 g:zenmode						*g:zenmode*
 	`g:zenmode` is dictionaly.
 		`delay`		number.
-				the millseconds of show the next line when return
-				from Command-mode.
+				the millseconds of show the next line when
+				return from Command-mode.
 				n(> 0): delay n seconds.
 				0: no delay.
 				-1: show the next line on cursor moved.
@@ -86,9 +86,11 @@ g:zenmode						*g:zenmode*
 				the exclude bufnames.
 				default is `['ControlP']`.
 		`refeshInteval`	number
-				the millseconds of refresh the next line.
-				`-1` means disable regular refresh.
+				the millseconds of a timer to refresh without
+				autocmd. e.g. on textoff is changed.
+				`-1` means disable the timer.
 				default is `100`.
+		(deprecated)
 		`preventEcho`	bool
 				Prevent to echo the next line.
 				(for echo you want.)
