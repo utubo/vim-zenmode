@@ -35,22 +35,22 @@ vim-zenmode is a Vim plugin emulates the next line with `echo` when statusline i
 ## VARIABLES
 
 ### `g:zenmode`
-`g:zenmode` is dictionaly.  
+`g:zenmode` is a dictionaly.  
 
 - `delay`  (default `-1`)  
   number.  
-  millseconds of show the next line when return from Command-mode.  
-  `n(> 0)`: delay n seconds.  
-  `0`: no delay.  
-  `-1`: show the next line on cursor moved.  
+  The millseconds of show the next line when return from Command-mode.  
+  `n(> 0)`: Delay n seconds.  
+  `0`: No delay.  
+  `-1`: Show the next line on cursor moved.  
 - `horiz`  (default empty)  
-  the char of the horizontal line.  
+  The char of the horizontal line.  
 - `exclude`  (default `['ControlP']`)  
-  the exclude bufnames.
+  The exclude bufnames.
 - `refeshInteval`  (default `100`)  
   number  
-  the millseconds of a timer to refresh without
-  autocmd. e.g. on textoff is changed.
+  The millseconds of a timer to refresh without
+  autocmd. e.g. On textoff is changed.
   `-1` means disable regular refreshs.
 - `preventEcho`  (deprecated, default `false`)  
   Prevent to echo the next line.  

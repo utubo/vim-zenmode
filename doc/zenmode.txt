@@ -72,7 +72,7 @@ FUNCTIONS						*zenmode-functions*
 VARIABLES						*zenmode-variables*
 
 g:zenmode						*g:zenmode*
-	`g:zenmode` is dictionaly.
+	`g:zenmode` is a dictionaly.
 		`delay`		number  (default `-1`)
 				The millseconds of show the next line when
 				return from Command-mode.
