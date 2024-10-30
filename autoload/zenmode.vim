@@ -94,8 +94,8 @@ export def Init()
     au ModeChanged t:* b:zenmode_teminal = false|Silent(RedrawNow)
     au ModeChanged *:t b:zenmode_teminal = true|Silent(RedrawNow)
     au TabEnter * Silent(Invalidate)
-    au OptionSet number,relativenumber,signcolumn CheckTextoff()
-    au OptionSet laststatus,fillchars Silent(Invalidate)
+    au OptionSet signcolumn CheckTextoff()
+    au OptionSet laststatus,fillchars,number,relativenumber Silent(Invalidate)
     au CursorMoved * Silent(CursorMoved)
   augroup END
   # prevent to echo search word
