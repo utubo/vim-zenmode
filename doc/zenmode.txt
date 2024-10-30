@@ -78,7 +78,7 @@ g:zenmode						*g:zenmode*
 				from Command-mode.
 				n(> 0): delay n seconds.
 				0: no delay.
-				n(< 0): show the next line on cursor moved.
+				-1: show the next line on cursor moved.
 				default is `-1`.
 		`horiz`		the char of the horizontal line on.
 				default is empty.
