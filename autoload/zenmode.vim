@@ -13,6 +13,7 @@ var statusline_bkup = &statusline
 var converted_hl = {}
 var normal_fg = ''
 var normal_bg = ''
+var refresh_timer = 0
 b:zenmode_teminal = false
 
 # --------------------
@@ -24,9 +25,8 @@ def Silent(F: func)
   try
     F()
   catch
-    augroup zenmode
-      au!
-    augroup END
+    au! zenmode
+    timer_stop(refresh_timer)
     g:zenmode = get(g:, 'zenmode', {})
     g:zenmode.lasterror = v:exception
     g:zenmode.initialized = 0
@@ -75,6 +75,7 @@ export def Init()
     delay: -1,
     exclude: ['ControlP'],
     preventEcho: false,
+    refreshInterval: 100,
   }
   g:zenmode->extend(override)
   set noruler
@@ -107,6 +108,10 @@ export def Init()
   Enable()
   g:zenmode.initialized = 1
   timer_start(g:zenmode.delay, 'zenmode#Invalidate')
+  if 0 < g:zenmode.refreshInterval
+    refresh_timer = timer_start(g:zenmode.refreshInterval, CheckTextoff, { repeat: -1 })
+  endif
+  RedrawNow()
 enddef
 
 # Scroll event
@@ -173,6 +178,22 @@ def SetupColor()
   const id = hlID('NonText')->synIDtrans()
   const fg = NVL(synIDattr(id, 'fg#'), 'NONE')
   execute $'hi default ZenmodeHoriz {x}=strikethrough {x}fg={fg}'
+enddef
+
+var textoff_bk = 0
+def CheckTextoff(t: number = 0)
+  if !bottomWinIds
+    return
+  endif
+  const a = getwininfo(bottomWinIds[0])
+  if !a
+    return
+  endif
+  const b = a[0].textoff
+  if b !=# textoff_bk
+    textoff_bk = b
+    RedrawNow()
+  endif
 enddef
 
 # --------------------
