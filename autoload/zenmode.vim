@@ -107,7 +107,6 @@ export def Init()
   SetupColor()
   Enable()
   g:zenmode.initialized = 1
-  timer_start(g:zenmode.delay, 'zenmode#Invalidate')
   if 0 < g:zenmode.refreshInterval
     refresh_timer = timer_start(g:zenmode.refreshInterval, CheckTextoff, { repeat: -1 })
   endif

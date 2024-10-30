@@ -74,7 +74,7 @@ VARIABLES						*zenmode-variables*
 g:zenmode						*g:zenmode*
 	`g:zenmode` is dictionaly.
 		`delay`		number.
-				the seconds of show the next line when return
+				the millseconds of show the next line when return
 				from Command-mode.
 				n(> 0): delay n seconds.
 				0: no delay.
