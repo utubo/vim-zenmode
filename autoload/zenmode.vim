@@ -33,7 +33,8 @@ def Silent(F: func)
     echoh ErrorMsg
     echom 'vim-zenmode was stopped for safety.'
     echom '  You can `:call zenmode#Init()` to restart.'
-    echom $'  Exception: {v:exception}'
+    echom $'  v:exception: {v:exception}'
+    echom $'  v:throwpoint: {v:throwpoint}'
     echoh Normal
     throw v:exception
   endtry
