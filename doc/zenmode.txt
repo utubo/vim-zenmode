@@ -1,4 +1,4 @@
-*zenmode.txt*
+*zenmode.txt*	Hide cmdline and statusline.
 
 Author  : utubo
 License : MIT license  {{{
