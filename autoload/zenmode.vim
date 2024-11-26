@@ -97,7 +97,7 @@ export def Init()
     au ModeChanged t:* b:zenmode_teminal = false|Silent(RedrawNow)
     au ModeChanged *:t b:zenmode_teminal = true|Silent(RedrawNow)
     au TabEnter * Silent(Invalidate)
-    au OptionSet signcolumn CheckTextoff()
+    au OptionSet signcolumn if CheckTextoff()|RedrawNow()|endif
     au OptionSet laststatus,fillchars,number,relativenumber Silent(Invalidate)
     au CursorMoved * Silent(CursorMoved)
   augroup END
@@ -184,37 +184,39 @@ def SetupColor()
 enddef
 
 var textoff_bk = 0
-def CheckTextoff(t: number = 0)
+def CheckTextoff(): bool
   if !bottomWinIds
-    return
+    return false
   endif
   const a = getwininfo(bottomWinIds[0])
   if !a
-    return
+    return false
   endif
   const b = a[0].textoff
-  if b !=# textoff_bk
-    textoff_bk = b
-    RedrawNow()
-    return
+  if b ==# textoff_bk
+    return false
   endif
+  textoff_bk = b
+  return true
 enddef
 
 var foldclosed_bk = 0
-def CheckFoldClosed()
+def CheckFoldClosed(): bool
   if !bottomWinIds
-    return
+    return false
   endif
   const f = foldclosed('.')
-  if f !=# foldclosed_bk
-    foldclosed_bk = f
-    RedrawNow()
+  if f ==# foldclosed_bk
+    return false
   endif
+  foldclosed_bk = f
+  return true
 enddef
 
 def RegularRefresh(t: number = 0)
-  CheckTextoff()
-  CheckFoldClosed()
+  if CheckTextoff() || CheckFoldClosed()
+    RedrawNow()
+  endif
 enddef
 
 # --------------------
