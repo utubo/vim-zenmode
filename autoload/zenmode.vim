@@ -170,11 +170,11 @@ def GetFgBg(name: string): any
 enddef
 
 def SetupColor()
-  const x = has('gui') ? 'gui' : 'cterm'
   # prevent to link Normal to MsgArea
   const normal_id = hlID('Normal')->synIDtrans()
   normal_fg = NVL(synIDattr(normal_id, 'fg#'), 'NONE')
   normal_bg = NVL(synIDattr(normal_id, 'bg#'), 'NONE')
+  const x = normal_fg[0] =~# '^\d*$' ? 'cterm' : 'gui'
   execute $'hi ZenNormal {x}fg={normal_fg} {x}bg={normal_bg}'
   converted_hl = { 'Normal': 'ZenNormal' }
   # horizontal line
