@@ -180,7 +180,7 @@ def SetupColor()
   # horizontal line
   const id = hlID('NonText')->synIDtrans()
   const fg = NVL(synIDattr(id, 'fg#'), 'NONE')
-  execute $'hi default ZenmodeHoriz {x}=strikethrough {x}fg={fg}'
+  execute $'silent! hi default ZenmodeHoriz {x}=strikethrough {x}fg={fg}'
 enddef
 
 var textoff_bk = 0
