@@ -442,7 +442,11 @@ enddef
 export def Invalidate(timer: any = 0)
   augroup zenmode_invalidate
     au!
-    au SafeState * ++once Silent(RedrawNow)
+    au SafeState * ++once {
+      if mode() !=# 'c'
+        Silent(RedrawNow)
+      endif
+    }
   augroup END
 enddef
 
