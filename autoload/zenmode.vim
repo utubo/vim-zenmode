@@ -14,7 +14,8 @@ var converted_hl = {}
 var normal_fg = ''
 var normal_bg = ''
 var refresh_timer = 0
-var preventEcho = false
+var refresh_on_cursormoved = true
+var cur_bkup = []
 b:zenmode_teminal = false
 
 # --------------------
@@ -143,7 +144,7 @@ enddef
 
 # Other events
 def CursorMoved()
-  if enable
+  if enable && refresh_on_cursormoved
     timer_start(0, EchoNextLine)
   endif
 enddef
@@ -152,9 +153,13 @@ def OnCmdlineEnter()
   if !enable
     return
   endif
-  preventEcho = true
+  refresh_on_cursormoved = false
+  cur_bkup = getcurpos()
   au CmdlineLeave * ++once timer_start(0, (_) => {
-    preventEcho = false
+    refresh_on_cursormoved = true
+    if cur_bkup !=# getcurpos()
+      Invalidate()
+    endif
   })
   if 0 <= g:zenmode.delay
     au CmdlineLeave * ++once timer_start(g:zenmode.delay, 'zenmode#Invalidate')
@@ -270,7 +275,7 @@ enddef
 
 def EchoNextLine(timer: any = 0, opt: any = { redraw: false })
   # Check
-  if !enable || g:zenmode.preventEcho || preventEcho
+  if !enable || g:zenmode.preventEcho
     return
   endif
   if g:zenmode.exclude->index(bufname('%')) !=# -1
