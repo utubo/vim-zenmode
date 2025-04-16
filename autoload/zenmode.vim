@@ -14,6 +14,7 @@ var converted_hl = {}
 var normal_fg = ''
 var normal_bg = ''
 var refresh_timer = 0
+var preventEcho = false
 b:zenmode_teminal = false
 
 # --------------------
@@ -93,7 +94,7 @@ export def Init()
     au WinLeave * Silent(Invalidate)
     au WinScrolled * Silent(OnSizeChangedOrScrolled)
     au ModeChanged [^c]:[^t] Silent(Invalidate)
-    au ModeChanged c:* Silent(OverwriteEchoWithDelay)
+    au ModeChanged *:c Silent(OnCmdlineEnter)
     au ModeChanged t:* b:zenmode_teminal = false|Silent(RedrawNow)
     au ModeChanged *:t b:zenmode_teminal = true|Silent(RedrawNow)
     au TabEnter * Silent(Invalidate)
@@ -147,9 +148,16 @@ def CursorMoved()
   endif
 enddef
 
-def OverwriteEchoWithDelay()
-  if enable && 0 <= g:zenmode.delay
-    timer_start(g:zenmode.delay, 'zenmode#Invalidate')
+def OnCmdlineEnter()
+  if !enable
+    return
+  endif
+  preventEcho = true
+  au CmdlineLeave * ++once timer_start(0, (_) => {
+    preventEcho = false
+  })
+  if 0 <= g:zenmode.delay
+    au CmdlineLeave * ++once timer_start(g:zenmode.delay, 'zenmode#Invalidate')
   endif
 enddef
 
@@ -261,8 +269,8 @@ def ZenLeave()
 enddef
 
 def EchoNextLine(timer: any = 0, opt: any = { redraw: false })
-  # Setup
-  if !enable || g:zenmode.preventEcho
+  # Check
+  if !enable || g:zenmode.preventEcho || preventEcho
     return
   endif
   if g:zenmode.exclude->index(bufname('%')) !=# -1
@@ -272,6 +280,7 @@ def EchoNextLine(timer: any = 0, opt: any = { redraw: false })
   if m ==# 'c' || m ==# 'r'
     return
   endif
+  # Setup
   if winupdated ==# 1
     UpdateBottomWinIds()
   endif
