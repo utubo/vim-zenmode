@@ -155,14 +155,14 @@ def OnCmdlineEnter()
   endif
   refresh_on_cursormoved = false
   cur_bkup = getcurpos()
-  au CmdlineLeave * ++once timer_start(0, (_) => {
+  au ModeChanged c:[^c] ++once timer_start(0, (_) => {
     refresh_on_cursormoved = true
     if cur_bkup !=# getcurpos()
       Invalidate()
     endif
   })
   if 0 <= g:zenmode.delay
-    au CmdlineLeave * ++once timer_start(g:zenmode.delay, 'zenmode#Invalidate')
+    au ModeChanged c:[^c] ++once timer_start(g:zenmode.delay, 'zenmode#Invalidate')
   endif
 enddef
 
