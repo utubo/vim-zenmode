@@ -399,7 +399,7 @@ def EchoNextLineWin(winid: number)
     var vw = strdisplaywidth(vc)
     if width <= v + vw
       echoh SpecialKey
-      echon iswrap ? '@' : (listchars.extends ?? printf('%.1S', vc))
+      echon listchars.extends ?? printf('%.1S', vc)
       v += 1
       break
     endif
