@@ -372,7 +372,8 @@ def EchoNextLineWin(winid: number)
   var text = NVL(getbufline(winbufnr(winnr), linenr), [''])[0]
   # wrapped
   # TODO: The line is dolubled when botline is wrapped.
-  if getwinvar(winnr, '&wrap') && width < strdisplaywidth(text)
+  const iswrap = getwinvar(winnr, '&wrap')
+  if iswrap && screenpos(winnr, linenr, 0).row !=# 0
     echoh EndOfBuffer
     echon repeat(NVL(matchstr(&fcs, '\(lastline:\)\@<=.'), '@'), width)
     echoh Normal
@@ -398,7 +399,7 @@ def EchoNextLineWin(winid: number)
     var vw = strdisplaywidth(vc)
     if width <= v + vw
       echoh SpecialKey
-      echon listchars.extends ?? printf('%.1S', vc)
+      echon iswrap ? '@' : (listchars.extends ?? printf('%.1S', vc))
       v += 1
       break
     endif
