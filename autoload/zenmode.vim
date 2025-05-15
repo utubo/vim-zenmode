@@ -204,14 +204,14 @@ enddef
 def GetTabPanel(): list<number>
   var p = [0, 0]
   var s = 0
-  silent! s = execute('echo &showtabpanel')->str2nr()
+  silent! s = execute('echon &showtabpanel')->str2nr()
   if s ==# 0 || s ==# 1 && tabpagenr('$') ==# 1
     return p
   endif
   var opt = ''
-  silent! opt = execute('echo &tabpanelopt')
+  silent! opt = execute('echon &tabpanelopt')
   const c = opt->matchstr('\(columns:\)\@<=\d\+')->str2nr() ?? 20
-  if c < &columns
+  if &columns < c
     return p
   endif
   const i = opt->stridx('align:right') !=# -1 ? 1 : 0
