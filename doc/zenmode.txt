@@ -58,7 +58,7 @@ Install
 		# toggle Zen-Mode
 		nnoremap ZZ <Cmd>let &laststatus = !&laststatus ? 2 : 0<CR>
 <
-
+Note:	This does not support contens of tabpanel.
 
 ==============================================================================
 FUNCTIONS						*zenmode-functions*

@@ -99,7 +99,7 @@ export def Init()
     au ModeChanged t:* b:zenmode_teminal = false|Silent(RedrawNow)
     au ModeChanged *:t b:zenmode_teminal = true|Silent(RedrawNow)
     au TabEnter * Silent(Invalidate)
-    au OptionSet signcolumn if CheckTextoff()|RedrawNow()|endif
+    au OptionSet signcolumn Silent(OnSign)
     au OptionSet laststatus,fillchars,number,relativenumber Silent(Invalidate)
     au CursorMoved * Silent(CursorMoved)
   augroup END
@@ -148,6 +148,11 @@ def CursorMoved()
     timer_start(0, EchoNextLine)
   endif
 enddef
+def OnSign()
+   if CheckTextoff()
+      RedrawNow()
+   endif
+enddef
 
 def OnCmdlineEnter()
   if !enable
@@ -194,6 +199,30 @@ def SetupColor()
   const id = hlID('NonText')->synIDtrans()
   const fg = NVL(synIDattr(id, 'fg#'), 'NONE')
   execute $'silent! hi default ZenmodeHoriz {x}=strikethrough {x}fg={fg}'
+enddef
+
+def GetTabPanel(): list<number>
+  var p = [0, 0]
+  var s = 0
+  silent! s = &showtabpanel
+  if s ==# 0 || s ==# 1 && tabpagenr('$') ==# 1
+    return p
+  endif
+  var opt = ''
+  silent! opt = &tabpanelopt
+  const c = opt->matchstr('\(columns:\)\@<=\d\+')->str2nr() ?? 20
+  if c < &columns
+    return p
+  endif
+  const i = opt->stridx('align:right') !=# -1 ? 1 : 0
+  p[i] = c
+  return p
+enddef
+
+def EchoTabPanel(width: number)
+  echoh TabPanelFill
+  echon repeat(' ', width)
+  echoh Normal
 enddef
 
 var textoff_bk = 0
@@ -295,22 +324,31 @@ def EchoNextLine(timer: any = 0, opt: any = { redraw: false })
     echo "\r"
   endif
   # Echo !
+  const tabpanel = GetTabPanel()
+  if !!tabpanel[0]
+    EchoTabPanel(tabpanel[0])
+  endif
+
   var has_prev = false
   for winid in bottomWinIds
     if has_prev
       echoh VertSplit
       echon vertchar
     endif
-    EchoNextLineWin(winid)
+    EchoNextLineWin(winid, !tabpanel[1])
     has_prev = true
   endfor
+
+  if !!tabpanel[1]
+    EchoTabPanel(tabpanel[1] - 1)
+  endif
 enddef
 
-def EchoNextLineWin(winid: number)
+def EchoNextLineWin(winid: number, prevent_linebreak: bool)
   const winnr = win_id2win(winid)
   var width = winwidth(winnr)
   # prevent linebreak with echo
-  if winid ==# bottomWinIds[-1]
+  if winid ==# bottomWinIds[-1] && prevent_linebreak
     width -= 1
   endif
   if width <= 0

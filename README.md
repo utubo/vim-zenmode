@@ -23,6 +23,7 @@ vim-zenmode is a Vim plugin emulates the next line with `echo` when statusline i
   # toggle Zen-Mode
   nnoremap ZZ <Cmd>call zenmode#Toggle()<CR>
   ```
+Note: This does not support contens of tabpanel.
 
 ## FUNCTIONS
 - `zenmode#Enable(): bool`
