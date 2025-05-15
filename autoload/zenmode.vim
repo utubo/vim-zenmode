@@ -103,10 +103,8 @@ export def Init()
     au OptionSet signcolumn Silent(OnSign)
     au OptionSet laststatus,fillchars,number,relativenumber Silent(Invalidate)
     au CursorMoved * Silent(CursorMoved)
-    if has('tabpanel')
-      execute 'au OptionSet tabpanelopt,showtabpanel Silent(GetTabPanel)'
-      au TabNew,TabClosed * Silent(GetTabPanel)
-    endif
+    au OptionSet tabpanelopt,showtabpanel Silent(GetTabPanel)
+    au TabNew,TabClosed * Silent(GetTabPanel)
   augroup END
   # prevent to echo search word
   if maparg('n', 'n')->empty()
@@ -121,9 +119,7 @@ export def Init()
   if 0 < g:zenmode.refreshInterval
     refresh_timer = timer_start(g:zenmode.refreshInterval, RegularRefresh, { repeat: -1 })
   endif
-  if has('tabpanel')
-    GetTabPanel()
-  endif
+  GetTabPanel()
   RedrawNow()
 enddef
 
@@ -211,6 +207,9 @@ enddef
 
 def GetTabPanel()
   tabpanel = [0, 0]
+  if !has('tabpanel')
+    return
+  endif
   var s = 0
   silent! s = execute('echon &showtabpanel')->str2nr()
   if s ==# 0 || s ==# 1 && tabpagenr('$') ==# 1
