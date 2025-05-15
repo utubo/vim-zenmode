@@ -340,7 +340,8 @@ def EchoNextLine(timer: any = 0, opt: any = { redraw: false })
       echoh VertSplit
       echon vertchar
     endif
-    EchoNextLineWin(winid, !tabpanel[1])
+    const prevent_linebreak = winid ==# bottomWinIds[-1] && !tabpanel[1]
+    EchoNextLineWin(winid, prevent_linebreak)
     has_prev = true
   endfor
 
@@ -353,7 +354,7 @@ def EchoNextLineWin(winid: number, prevent_linebreak: bool)
   const winnr = win_id2win(winid)
   var width = winwidth(winnr)
   # prevent linebreak with echo
-  if winid ==# bottomWinIds[-1] && prevent_linebreak
+  if prevent_linebreak
     width -= 1
   endif
   if width <= 0
