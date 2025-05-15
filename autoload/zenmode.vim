@@ -16,6 +16,7 @@ var normal_bg = ''
 var refresh_timer = 0
 var refresh_on_cursormoved = true
 var cur_bkup = []
+var tabpanel = [0, 0]
 b:zenmode_teminal = false
 
 # --------------------
@@ -102,6 +103,10 @@ export def Init()
     au OptionSet signcolumn Silent(OnSign)
     au OptionSet laststatus,fillchars,number,relativenumber Silent(Invalidate)
     au CursorMoved * Silent(CursorMoved)
+    if has('tabpanel')
+      execute 'au OptionSet tabpanelopt,showtabpanel Silent(GetTabPanel)'
+      au TabNew,TabClosed * Silent(GetTabPanel)
+    endif
   augroup END
   # prevent to echo search word
   if maparg('n', 'n')->empty()
@@ -115,6 +120,9 @@ export def Init()
   g:zenmode.initialized = 1
   if 0 < g:zenmode.refreshInterval
     refresh_timer = timer_start(g:zenmode.refreshInterval, RegularRefresh, { repeat: -1 })
+  endif
+  if has('tabpanel')
+    GetTabPanel()
   endif
   RedrawNow()
 enddef
@@ -201,22 +209,21 @@ def SetupColor()
   execute $'silent! hi default ZenmodeHoriz {x}=strikethrough {x}fg={fg}'
 enddef
 
-def GetTabPanel(): list<number>
-  var p = [0, 0]
+def GetTabPanel()
+  tabpanel = [0, 0]
   var s = 0
   silent! s = execute('echon &showtabpanel')->str2nr()
   if s ==# 0 || s ==# 1 && tabpagenr('$') ==# 1
-    return p
+    return
   endif
   var opt = ''
   silent! opt = execute('echon &tabpanelopt')
   const c = opt->matchstr('\(columns:\)\@<=\d\+')->str2nr() ?? 20
   if &columns < c
-    return p
+    return
   endif
   const i = opt->stridx('align:right') !=# -1 ? 1 : 0
-  p[i] = c
-  return p
+  tabpanel[i] = c
 enddef
 
 def EchoTabPanel(width: number)
@@ -324,7 +331,6 @@ def EchoNextLine(timer: any = 0, opt: any = { redraw: false })
     echo "\r"
   endif
   # Echo !
-  const tabpanel = GetTabPanel()
   if !!tabpanel[0]
     EchoTabPanel(tabpanel[0])
   endif
