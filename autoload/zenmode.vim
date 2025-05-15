@@ -226,9 +226,11 @@ def GetTabPanel()
 enddef
 
 def EchoTabPanel(width: number)
-  echoh TabPanelFill
-  echon repeat(' ', width)
-  echoh Normal
+  if 1 < width
+    echoh TabPanelFill
+    echon repeat(' ', width)
+    echoh Normal
+  endif
 enddef
 
 var textoff_bk = 0
@@ -330,10 +332,7 @@ def EchoNextLine(timer: any = 0, opt: any = { redraw: false })
     echo "\r"
   endif
   # Echo !
-  if !!tabpanel[0]
-    EchoTabPanel(tabpanel[0])
-  endif
-
+  EchoTabPanel(tabpanel[0])
   var has_prev = false
   for winid in bottomWinIds
     if has_prev
@@ -344,10 +343,7 @@ def EchoNextLine(timer: any = 0, opt: any = { redraw: false })
     EchoNextLineWin(winid, prevent_linebreak)
     has_prev = true
   endfor
-
-  if !!tabpanel[1]
-    EchoTabPanel(tabpanel[1] - 1)
-  endif
+  EchoTabPanel(tabpanel[1] - 1)
 enddef
 
 def EchoNextLineWin(winid: number, prevent_linebreak: bool)
