@@ -106,7 +106,7 @@ export def Init()
     au OptionSet signcolumn Silent(OnSign)
     au OptionSet laststatus,fillchars,number,relativenumber Silent(Invalidate)
     au CursorMoved * Silent(CursorMoved)
-    au OptionSet tabpanelopt,showtabpanel Silent(GetTabPanel)
+    au OptionSet tabpanelopt,showtabpanel,ruler Silent(GetTabPanel)
     au TabNew,TabClosed * Silent(GetTabPanel)
   augroup END
   # prevent to echo search word
@@ -210,7 +210,7 @@ enddef
 
 def GetTabPanel()
   tabpanel = [0, 0]
-  if !has('tabpanel')
+  if !has('tabpanel') || &ruler
     return
   endif
   var s = 0
