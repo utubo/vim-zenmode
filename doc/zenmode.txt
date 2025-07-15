@@ -87,9 +87,12 @@ g:zenmode						*g:zenmode*
 				The exclude bufnames.
 
 		`refeshInteval`	number  (default `100`)
-				the millseconds of a timer to refresh without
+				The millseconds of a timer to refresh without
 				autocmd. e.g. on textoff is changed.
 				`-1` means disable the timer.
+
+		`ruler`		boolean (default false)
+				Keep the ruler.
 
 	Deprecated
 		`preventEcho`	bool  (default `false`)

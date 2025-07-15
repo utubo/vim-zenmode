@@ -82,9 +82,12 @@ export def Init()
     exclude: ['ControlP'],
     preventEcho: false,
     refreshInterval: 100,
+    ruler: false,
   }
   g:zenmode->extend(override)
-  set noruler
+  if !g:zenmode.ruler
+    set noruler
+  endif
   set noshowcmd
   set laststatus=0
   augroup zenmode
