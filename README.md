@@ -1,7 +1,7 @@
 # vim-zenmode
 
 ⚠ THIS HAS MANY BUGS !  
-📜 Powered by vim9script
+📜 Powered by Vim9 script
 
 ## INTRODUCTION
 vim-zenmode is a Vim plugin emulates the next line with `echo` when statusline is not visible.
@@ -10,7 +10,7 @@ vim-zenmode is a Vim plugin emulates the next line with `echo` when statusline i
 
 ## USAGE
 ### Require
-- vim9script
+- Vim9 script
 
 ### Install
 - Example of `.vimrc`

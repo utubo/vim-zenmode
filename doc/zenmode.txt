@@ -44,7 +44,7 @@ https://github.com/utubo/vim-zenmode
 USAGE							*zenmode-usage*
 
 Require
-	vim9script
+	Vim9 script
 
 Install
 
