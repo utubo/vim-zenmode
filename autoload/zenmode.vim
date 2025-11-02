@@ -226,6 +226,7 @@ def GetTabPanel()
   endif
   const i = opt->stridx('align:right') !=# -1 ? 1 : 0
   tabpanel[i] = c
+  tabpanel[!i ? 1 : 0] = 0
 enddef
 
 def EchoTabPanel(width: number)
@@ -342,7 +343,7 @@ def EchoNextLine(timer: any = 0, opt: any = { redraw: false })
       echoh VertSplit
       echon vertchar
     endif
-    const prevent_linebreak = winid ==# bottomWinIds[-1] && !tabpanel[1]
+    const prevent_linebreak = winid ==# bottomWinIds[-1] && !tabpanel[1] && !&ruler
     EchoNextLineWin(winid, prevent_linebreak)
     has_prev = true
   endfor
