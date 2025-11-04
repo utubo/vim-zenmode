@@ -297,7 +297,7 @@ def ZenEnter()
     listchars[k] = v
   endfor
   const p = &fillchars->stridx('vert:')
-  vertchar = p !=# -1 ? &fillchars[p + 5] : '|'
+  vertchar = p !=# -1 ? &fillchars[p + 5] : ' '
   # setup horizontal line
   if &statusline !=# zen_horizline
     statusline_bkup = &statusline
