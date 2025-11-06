@@ -16,7 +16,6 @@ var normal_bg = ''
 var refresh_timer = 0
 var refresh_on_cursormoved = true
 var cur_bkup = []
-var tabpanel = [0, 0]
 b:zenmode_teminal = false
 
 # --------------------
@@ -106,8 +105,6 @@ export def Init()
     au OptionSet signcolumn Silent(OnSign)
     au OptionSet laststatus,fillchars,number,relativenumber Silent(Invalidate)
     au CursorMoved * Silent(CursorMoved)
-    au OptionSet tabpanelopt,showtabpanel,ruler Silent(GetTabPanel)
-    au TabNew,TabClosed * Silent(GetTabPanel)
   augroup END
   # prevent to echo search word
   if maparg('n', 'n')->empty()
@@ -122,7 +119,6 @@ export def Init()
   if 0 < g:zenmode.refreshInterval
     refresh_timer = timer_start(g:zenmode.refreshInterval, RegularRefresh, { repeat: -1 })
   endif
-  GetTabPanel()
   RedrawNow()
 enddef
 
@@ -206,35 +202,6 @@ def SetupColor()
   const id = hlID('NonText')->synIDtrans()
   const fg = NVL(synIDattr(id, 'fg#'), 'NONE')
   execute $'silent! hi default ZenmodeHoriz {x}=strikethrough {x}fg={fg}'
-enddef
-
-def GetTabPanel()
-  tabpanel = [0, 0]
-  if !has('tabpanel') || &ruler
-    return
-  endif
-  var s = 0
-  silent! s = execute('echon &showtabpanel')->str2nr()
-  if s ==# 0 || s ==# 1 && tabpagenr('$') ==# 1
-    return
-  endif
-  var opt = ''
-  silent! opt = execute('echon &tabpanelopt')
-  const c = opt->matchstr('\(columns:\)\@<=\d\+')->str2nr() ?? 20
-  if &columns < c
-    return
-  endif
-  const i = opt->stridx('align:right') !=# -1 ? 1 : 0
-  tabpanel[i] = c
-  tabpanel[!i ? 1 : 0] = 0
-enddef
-
-def EchoTabPanel(width: number)
-  if 1 < width
-    echoh TabPanelFill
-    echon repeat(' ', width)
-    echoh Normal
-  endif
 enddef
 
 var textoff_bk = 0
@@ -336,18 +303,16 @@ def EchoNextLine(timer: any = 0, opt: any = { redraw: false })
     echo "\r"
   endif
   # Echo !
-  EchoTabPanel(tabpanel[0])
   var has_prev = false
   for winid in bottomWinIds
     if has_prev
       echoh VertSplit
       echon vertchar
     endif
-    const prevent_linebreak = winid ==# bottomWinIds[-1] && !tabpanel[1] && !&ruler
+    const prevent_linebreak = winid ==# bottomWinIds[-1]
     EchoNextLineWin(winid, prevent_linebreak)
     has_prev = true
   endfor
-  EchoTabPanel(tabpanel[1] - 1)
 enddef
 
 def EchoNextLineWin(winid: number, prevent_linebreak: bool)

@@ -10,7 +10,7 @@ vim-zenmode is a Vim plugin emulates the next line with `echo` when statusline i
 
 ## USAGE
 ### Require
-- Vim9 script
+- Vim9 Head
 
 ### Install
 - Example of `.vimrc`
