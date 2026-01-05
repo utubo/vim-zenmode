@@ -196,8 +196,8 @@ def SetupColor()
   normal_fg = NVL(synIDattr(normal_id, 'fg#'), 'NONE')
   normal_bg = NVL(synIDattr(normal_id, 'bg#'), 'NONE')
   const x = normal_fg[0] =~# '^\d*$' ? 'cterm' : 'gui'
-  execute $'hi ZenNormal {x}fg={normal_fg} {x}bg={normal_bg}'
-  converted_hl = { 'Normal': 'ZenNormal' }
+  execute $'hi ZenmodeNormal {x}fg={normal_fg} {x}bg={normal_bg}'
+  converted_hl = { 'Normal': 'ZenmodeNormal' }
   # horizontal line
   const id = hlID('NonText')->synIDtrans()
   const fg = NVL(synIDattr(id, 'fg#'), 'NONE')
@@ -393,7 +393,7 @@ def EchoNextLineWin(winid: number, prevent_linebreak: bool)
   var v = 0
   win_execute(winid, $'call zenmode#GetHiNames({linenr})')
   for c in split(text, '\zs')
-    echoh ZenNormal
+    echoh ZenmodeNormal
     var vc = c
     if vc ==# "\t"
       echoh SpecialKey
@@ -416,7 +416,7 @@ def EchoNextLineWin(winid: number, prevent_linebreak: bool)
     i += len(c)
     v += vw
   endfor
-  echoh ZenNormal
+  echoh ZenmodeNormal
   echon repeat(' ', width - v)
   echoh Normal
 enddef
@@ -427,7 +427,7 @@ enddef
 
 var hi_names = []
 export def GetHiNames(l: number)
-  hi_names = ['ZenNormal']
+  hi_names = ['ZenmodeNormal']
   for c in range(1, getline(l)->printf($'%+{winwidth(0)}S')->len())
     const name = synID(l, c, 1)->synIDattr('name')
     if ! converted_hl->has_key(name)
@@ -435,7 +435,7 @@ export def GetHiNames(l: number)
       const fg = NVL(synIDattr(id, 'fg#'), normal_fg)
       const bg = NVL(synIDattr(id, 'bg#'), normal_bg)
       if fg ==# normal_fg && bg ==# normal_bg
-        converted_hl[name] = 'ZenNormal'
+        converted_hl[name] = 'ZenmodeNormal'
       else
         converted_hl[name] = name
       endif
