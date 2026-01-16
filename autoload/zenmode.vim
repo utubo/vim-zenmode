@@ -332,7 +332,7 @@ def EchoNextLineWin(winid: number, prevent_linebreak: bool)
     return
   endif
 
-  if g:zenmode.override(winnr, width)
+  if g:zenmode.override(winid, width)
     return
   endif
 
