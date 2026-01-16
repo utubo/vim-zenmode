@@ -96,10 +96,10 @@ g:zenmode						*g:zenmode*
 
 		override
 				A funcref to echo next line.
-				The arguments are winid and width.
+				The arguments are winid, winnr and width.
 				This returns |true| when hooked.
 				e.g.) >
-				g:zenomde.override = (_, width): bool => {
+				g:zenomde.override = (i, n, width): bool => {
 					echon repeat('*', width)
 					return true
 				}
