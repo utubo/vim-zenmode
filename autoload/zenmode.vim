@@ -73,6 +73,10 @@ enddef
 # Setup
 # --------------------
 
+def Nop(_: number, __: number): bool
+  return false
+enddef
+
 export def Init()
   const override = get(g:, 'zenmode', {})
   g:zenmode = {
@@ -82,6 +86,7 @@ export def Init()
     preventEcho: false,
     refreshInterval: 100,
     ruler: false,
+    override: Nop,
   }
   g:zenmode->extend(override)
   if !g:zenmode.ruler
@@ -318,6 +323,7 @@ enddef
 def EchoNextLineWin(winid: number, prevent_linebreak: bool)
   const winnr = win_id2win(winid)
   var width = winwidth(winnr)
+
   # prevent linebreak with echo
   if prevent_linebreak
     width -= 1
@@ -325,6 +331,11 @@ def EchoNextLineWin(winid: number, prevent_linebreak: bool)
   if width <= 0
     return
   endif
+
+  if g:zenmode.override(winnr, width)
+    return
+  endif
+
   if !!getbufvar(getwininfo(winid)[0].bufnr, 'zenmode_teminal')
     echoh Terminal
     echon repeat(' ', width)
@@ -336,6 +347,7 @@ def EchoNextLineWin(winid: number, prevent_linebreak: bool)
     linenr = str2nr(fce)
   endif
   linenr += 1
+
   # end of buffer
   if linenr > line('$', winid)
     echoh EndOfBuffer
@@ -345,6 +357,7 @@ def EchoNextLineWin(winid: number, prevent_linebreak: bool)
   endif
   const textoff = getwininfo(winid)[0].textoff
   width -= textoff
+
   # sign & line-number
   if textoff !=# 0
     var w = textoff
@@ -368,6 +381,7 @@ def EchoNextLineWin(winid: number, prevent_linebreak: bool)
       echon repeat(' ', w)
     endif
   endif
+
   # folded
   if WinGetLn(winid, linenr, 'foldclosed') !=# '-1'
     echoh Folded
@@ -375,10 +389,12 @@ def EchoNextLineWin(winid: number, prevent_linebreak: bool)
     echoh Normal
     return
   endif
+
   # tab
   const ts = getwinvar(winnr, '&tabstop')
   const expandtab = listchars.tab[0] .. repeat(listchars.tab[1], ts)
   var text = NVL(getbufline(winbufnr(winnr), linenr), [''])[0]
+
   # wrapped
   # TODO: The line is dolubled when botline is wrapped.
   const iswrap = getwinvar(winnr, '&wrap')
@@ -388,6 +404,7 @@ def EchoNextLineWin(winid: number, prevent_linebreak: bool)
     echoh Normal
     return
   endif
+
   # show text
   var i = 1
   var v = 0

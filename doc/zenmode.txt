@@ -94,6 +94,15 @@ g:zenmode						*g:zenmode*
 		`ruler`		boolean (default false)
 				Keep the ruler.
 
+		override
+				A funcref to echo next line.
+				The arguments are winnr and width.
+				e.g.) >
+				g:zenomde.override = (winnr, width) => {
+					echon repeat('*', width)
+				}
+<
+
 	Deprecated
 		`preventEcho`	bool  (default `false`)
 				Prevent to echo the next line.
