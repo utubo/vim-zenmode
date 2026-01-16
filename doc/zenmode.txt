@@ -34,7 +34,7 @@ COLORS				|zenmode-colors|
 ==============================================================================
 INTRODUCTION						*zenmode-introduction*
 
-*zenmode* is a Vim plugin emulate the next line with `echo`.
+*zenmode* is a Vim plugin emulate the next line with |echo|.
 
 Latest version:
 https://github.com/utubo/vim-zenmode
@@ -48,7 +48,7 @@ Require
 
 Install
 
-	Example of `.vimrc`
+	Example of |.vimrc|
 >
 		vim9script
 		⋮
@@ -62,9 +62,9 @@ Note:	This does not support contens of tabpanel.
 
 ==============================================================================
 FUNCTIONS						*zenmode-functions*
-`zenmode#Enable(): bool` 	Enable zenmode and return true.
-`zenmode#Disable(): bool` 	Disable zenmode and return false.
-`zenmode#Toggle(): bool` 	Toggle zenmode and return true when
+zenmode#Enable(): bool		Enable zenmode and return true.
+zenmode#Disable(): bool		Disable zenmode and return false.
+zenmode#Toggle(): bool		Toggle zenmode and return true when
 				zenmode is enabeld.
 
 
@@ -72,29 +72,30 @@ FUNCTIONS						*zenmode-functions*
 VARIABLES						*zenmode-variables*
 
 g:zenmode						*g:zenmode*
-	`g:zenmode` is a dictionaly.
-		`delay`		number  (default `-1`)
+	|g:zenmode| is a dictionaly.
+		delay		number  (default |-1|)
 				The millseconds of show the next line when
 				return from Command-mode.
-				`n(> 0)`: Delay n seconds.
-				`0`: No delay.
-				`-1`: Show the next line on cursor moved.
+				|n(> 0)|: Delay n seconds.
+				|0|: No delay.
+				|-1|: Show the next line on cursor moved.
 
-		`horiz`		string  (default empty)
+		horiz		string  (default empty)
 				The char of the horizontal line on.
 
-		`exclude`	list<string>  (default  `['ControlP']`)
+		exclude		list<string>  (default  |['ControlP']|)
 				The exclude bufnames.
 
-		`refeshInteval`	number  (default `100`)
+		refeshInteval	number  (default |100|)
 				The millseconds of a timer to refresh without
 				autocmd. e.g. on textoff is changed.
-				`-1` means disable the timer.
+				|-1| means disable the timer.
 
-		`ruler`		boolean (default false)
+		ruler		boolean (default |false|)
 				Keep the ruler.
 
 		override
+				funcref (default |nop|)
 				A funcref to echo next line.
 				The arguments are winid, winnr and width.
 				This returns |true| when hooked.
@@ -106,14 +107,14 @@ g:zenmode						*g:zenmode*
 <
 
 	Deprecated
-		`preventEcho`	bool  (default `false`)
+		preventEcho	bool  (default |false|)
 				Prevent to echo the next line.
 				(for echo you want.)
 
 
 ==============================================================================
 COLORS							*zenmode-colors*
-- `ZenmodeHoriz` (default Strikeouted NonText)
+ZenmodeHoriz  (default Strikeouted NonText)
   Horizontal line.
 
 
