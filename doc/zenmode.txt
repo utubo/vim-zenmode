@@ -95,7 +95,7 @@ g:zenmode						*g:zenmode*
 				Keep the ruler.
 
 		override
-				funcref (default |nop|)
+				funcref (default |(_, _, _) => false|)
 				A funcref to echo next line.
 				The arguments are winid, winnr and width.
 				This returns |true| when hooked.
