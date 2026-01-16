@@ -73,7 +73,7 @@ enddef
 # Setup
 # --------------------
 
-def Nop(_: number, __: number): bool
+def Nop(_id: number, _nr: number, _width: number): bool
   return false
 enddef
 
