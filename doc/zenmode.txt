@@ -95,15 +95,17 @@ g:zenmode						*g:zenmode*
 				Keep the ruler.
 
 		override
-				funcref (default |(_, _, _) => false|)
+				funcref (default |(_, __, ___) => false|)
 				A funcref to echo next line.
 				The arguments are winid, winnr and width.
 				This returns |true| when hooked.
 				e.g.) >
-				g:zenomde.override = (i, n, width): bool => {
+				def Foo(_: number, __: number, width:
+				number): bool
 					echon repeat('*', width)
 					return true
-				}
+				enddef
+				g:zenomde.override = Foo
 <
 
 	Deprecated
