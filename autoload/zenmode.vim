@@ -69,13 +69,13 @@ def NVL(v: any, default: any): any
   return empty(v) ? default : v
 enddef
 
-# --------------------
-# Setup
-# --------------------
-
 def Nop(_id: number, _nr: number, _width: number): bool
   return false
 enddef
+
+# --------------------
+# Setup
+# --------------------
 
 export def Init()
   const override = get(g:, 'zenmode', {})
@@ -390,11 +390,6 @@ def EchoNextLineWin(winid: number, prevent_linebreak: bool)
     return
   endif
 
-  # tab
-  const ts = getwinvar(winnr, '&tabstop')
-  const expandtab = listchars.tab[0] .. repeat(listchars.tab[1], ts)
-  var text = NVL(getbufline(winbufnr(winnr), linenr), [''])[0]
-
   # wrapped
   # TODO: The line is dolubled when botline is wrapped.
   const iswrap = getwinvar(winnr, '&wrap')
@@ -405,36 +400,41 @@ def EchoNextLineWin(winid: number, prevent_linebreak: bool)
     return
   endif
 
+  # tab
+  const ts = getwinvar(winnr, '&tabstop')
+  const expandtab = listchars.tab[0] .. repeat(listchars.tab[1], ts)
+
   # show text
-  var i = 1
-  var v = 0
+  const text = NVL(getbufline(winbufnr(winnr), linenr), [''])[0]
+  var idx = 1
+  var dspw = 0
   win_execute(winid, $'call zenmode#GetHiNames({linenr})')
   for c in split(text, '\zs')
     echoh ZenmodeNormal
-    var vc = c
-    if vc ==# "\t"
+    var dspc = c # for expandtab
+    if dspc ==# "\t"
       echoh SpecialKey
       if !listchars.tab[2] # string to bool
-        vc = strpart(expandtab, 0, ts - v % ts)
+        dspc = strpart(expandtab, 0, ts - dspw % ts)
       else
-        vc = strpart(expandtab, 0, ts - v % ts - 1) .. listchars.tab[2]
+        dspc = strpart(expandtab, 0, ts - dspw % ts - 1) .. listchars.tab[2]
       endif
     else
-      execute 'echoh ' .. get(hi_names, i, 'Error')
+      execute 'echoh ' .. get(hi_names, idx, 'Error')
     endif
-    var vw = strdisplaywidth(vc)
-    if width <= v + vw
+    const new_dspw = dspw + strdisplaywidth(dspc)
+    if width <= new_dspw
       echoh SpecialKey
-      echon listchars.extends ?? printf('%.1S', vc)
-      v += 1
+      echon listchars.extends ?? printf('%.1S', dspc)
+      dspw += 1
       break
     endif
-    echon vc
-    i += len(c)
-    v += vw
+    echon dspc
+    idx += len(c)
+    dspw = new_dspw
   endfor
   echoh ZenmodeNormal
-  echon repeat(' ', width - v)
+  echon repeat(' ', width - dspw)
   echoh Normal
 enddef
 
