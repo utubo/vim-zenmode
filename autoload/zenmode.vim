@@ -459,7 +459,6 @@ export def GetHiNames(l: number)
     endif
     hi_names += [converted_hl[name]]
   endfor
-  g:hi_names = hi_names
 enddef
 
 # --------------------
