@@ -336,12 +336,15 @@ def EchoNextLineWin(winid: number, prevent_linebreak: bool)
     return
   endif
 
-  if !!getbufvar(getwininfo(winid)[0].bufnr, 'zenmode_teminal')
+  const wininfo = getwininfo(winid)[0]
+  const bufnr = wininfo.bufnr
+
+  if !!getbufvar(bufnr, 'zenmode_teminal')
     echoh Terminal
     echon repeat(' ', width)
     return
   endif
-  var linenr = line('w$', winid)
+  var linenr = wininfo.botline
   const fce = WinGetLn(winid, linenr, 'foldclosedend')
   if fce !=# '-1'
     linenr = str2nr(fce)
@@ -355,7 +358,7 @@ def EchoNextLineWin(winid: number, prevent_linebreak: bool)
     echoh Normal
     return
   endif
-  const textoff = getwininfo(winid)[0].textoff
+  const textoff = wininfo.textoff
   width -= textoff
 
   # sign & line-number
@@ -363,7 +366,7 @@ def EchoNextLineWin(winid: number, prevent_linebreak: bool)
     var w = textoff
     echoh SignColumn
     var snl = []
-    silent! snl = sign_getplaced(winbufnr(winnr), { lnum: linenr, group: '*' })[0].signs
+    silent! snl = sign_getplaced(bufnr, { lnum: linenr, group: '*' })[0].signs
     if !!snl
       const sn = sign_getdefined(snl[0].name)[0]
       silent! execute 'echoh ' .. sn.texthl
@@ -405,7 +408,7 @@ def EchoNextLineWin(winid: number, prevent_linebreak: bool)
   const expandtab = listchars.tab[0] .. repeat(listchars.tab[1], ts)
 
   # show text
-  const text = NVL(getbufline(winbufnr(winnr), linenr), [''])[0]
+  const text = bufnr->getbufline(linenr)->NVL([''])[0]
   var idx = 1
   var dspw = 0
   win_execute(winid, $'call zenmode#GetHiNames({linenr})')
