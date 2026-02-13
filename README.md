@@ -34,7 +34,7 @@ Note: This does not support contens of tabpanel.
   Toggle zenmode and return true when zenmode is enabeld.
 
 ## VARIABLES
-
+    
 ### `g:zenmode`
 `g:zenmode` is a dictionaly.  
 
