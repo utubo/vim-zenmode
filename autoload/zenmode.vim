@@ -372,14 +372,16 @@ def EchoNextLineWin(winid: number, prevent_linebreak: bool)
       silent! snl = sign_getplaced(bufnr, { lnum: linenr, group: '*' })[0].signs
       if !!snl
         const sn = sign_getdefined(snl[0].name)[0]
-        sign = get(sn, 'text', '  ')
-        silent! execute 'echoh ' .. sn.texthl
-        if scl ==# 'number'
-          echon ' '
-          w -= 1
+        sign = get(sn, 'text', '')
+        if !!sign
+          silent! execute 'echoh ' .. sn.texthl
+          if scl ==# 'number'
+            echon ' '
+            w -= 1
+          endif
+          echon sign
+          w -= 2
         endif
-        echon sign
-        w -= 2
       endif
     endif
     if !!w
