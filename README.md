@@ -53,9 +53,9 @@ Note: This does not support contens of tabpanel.
   The millseconds of a timer to refresh without
   autocmd. e.g. On textoff is changed.
   `-1` means disable regular refreshs.
-- `ruler` (default `false`)
+- `ruler` (default `false`)  
   Keep the ruler.
-- `override` (default `(_, __, ___) => false`)
+- `override` (default `(_, __, ___) => false`)  
   A funcref to echo next line.  
   The arguments are winid, winnr and width.  
   This returns |true| when hooked.  
