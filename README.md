@@ -61,8 +61,7 @@ Note: This does not support contens of tabpanel.
   This returns |true| when hooked.  
   e.g.)
   ```vim
-  def Foo(_: number, __: number, width:
-  number): bool
+  def Foo(_: number, __: number, width: number): bool
     echon repeat('*', width)
     return true
   enddef
