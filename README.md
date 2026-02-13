@@ -53,6 +53,21 @@ Note: This does not support contens of tabpanel.
   The millseconds of a timer to refresh without
   autocmd. e.g. On textoff is changed.
   `-1` means disable regular refreshs.
+- `ruler` (default `false`)
+  Keep the ruler.
+- `override` (default `(_, __, ___) => false`)
+  A funcref to echo next line.  
+  The arguments are winid, winnr and width.  
+  This returns |true| when hooked.  
+  e.g.)
+  ```vim
+  def Foo(_: number, __: number, width:
+  number): bool
+    echon repeat('*', width)
+    return true
+  enddef
+  g:zenomde.override = Foo
+  ```
 - `preventEcho`  (deprecated, default `false`)  
   Prevent to echo the next line.  
   (for echo you want.)
