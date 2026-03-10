@@ -287,7 +287,7 @@ def ZenLeave()
 enddef
 
 def EchoNextLine(timer: any = 0, opt: any = { redraw: false })
-  # Check
+  # check
   if !enable || g:zenmode.preventEcho
     return
   endif
@@ -298,7 +298,7 @@ def EchoNextLine(timer: any = 0, opt: any = { redraw: false })
   if m ==# 'c' || m ==# 'r'
     return
   endif
-  # Setup
+  # setup
   if winupdated ==# 1
     UpdateBottomWinIds()
   endif
@@ -307,43 +307,46 @@ def EchoNextLine(timer: any = 0, opt: any = { redraw: false })
   else
     echo "\r"
   endif
-  # Echo !
+  # echo
   var has_prev = false
+  const far_right_winid = bottomWinIds[-1]
   for winid in bottomWinIds
     if has_prev
       echoh VertSplit
       echon vertchar
     endif
-    const prevent_linebreak = winid ==# bottomWinIds[-1]
-    EchoNextLineWin(winid, prevent_linebreak)
+    EchoNextLineWin(winid, winid ==#  far_right_winid)
     has_prev = true
   endfor
 enddef
 
-def EchoNextLineWin(winid: number, prevent_linebreak: bool)
+def EchoNextLineWin(winid: number, far_right: bool)
   const winnr = win_id2win(winid)
   var width = winwidth(winnr)
 
-  # prevent linebreak with echo
-  if prevent_linebreak
+  # prevent linebreak
+  if far_right
     width -= 1
   endif
   if width <= 0
     return
   endif
 
-  if g:zenmode.override(winid, winnr, width)
-    return
-  endif
+  # echo
+  g:zenmode.override(winid, winnr, width) || Default(winid, winnr, width)
+enddef
 
+def Default(winid: number, winnr: number, _w: number): bool
+  var width = _w
   const wininfo = getwininfo(winid)[0]
   const bufnr = wininfo.bufnr
 
   if !!getbufvar(bufnr, 'zenmode_teminal')
     echoh Terminal
     echon repeat(' ', width)
-    return
+    return true
   endif
+
   var linenr = wininfo.botline
   const fce = WinGetLn(winid, linenr, 'foldclosedend')
   if fce !=# '-1'
@@ -356,7 +359,7 @@ def EchoNextLineWin(winid: number, prevent_linebreak: bool)
     echoh EndOfBuffer
     echon printf($'%-{width}S', NVL(matchstr(&fcs, '\(eob:\)\@<=.'), '~'))
     echoh Normal
-    return
+    return true
   endif
   const textoff = wininfo.textoff
   width -= textoff
@@ -407,7 +410,7 @@ def EchoNextLineWin(winid: number, prevent_linebreak: bool)
     echoh Folded
     echon printf($'%.{width}S', WinGetLn(winid, linenr, 'foldtextresult'))->printf($'%-{width}S')
     echoh Normal
-    return
+    return true
   endif
 
   # wrapped
@@ -417,7 +420,7 @@ def EchoNextLineWin(winid: number, prevent_linebreak: bool)
     echoh EndOfBuffer
     echon repeat(NVL(matchstr(&fcs, '\(lastline:\)\@<=.'), '@'), width)
     echoh Normal
-    return
+    return true
   endif
 
   # tab
@@ -430,7 +433,6 @@ def EchoNextLineWin(winid: number, prevent_linebreak: bool)
   var dspw = 0
   win_execute(winid, $'call zenmode#GetHiNames({linenr})')
   for c in split(text, '\zs')
-    echoh ZenmodeNormal
     var dspc = c # for expandtab
     if dspc ==# "\t"
       echoh SpecialKey
@@ -440,7 +442,7 @@ def EchoNextLineWin(winid: number, prevent_linebreak: bool)
         dspc = strpart(expandtab, 0, ts - dspw % ts - 1) .. listchars.tab[2]
       endif
     else
-      execute 'echoh ' .. get(hi_names, idx, 'Error')
+      execute 'echoh ' get(hi_names, idx, 'Error')
     endif
     const new_dspw = dspw + strdisplaywidth(dspc)
     if width <= new_dspw
@@ -456,6 +458,7 @@ def EchoNextLineWin(winid: number, prevent_linebreak: bool)
   echoh ZenmodeNormal
   echon repeat(' ', width - dspw)
   echoh Normal
+  return true
 enddef
 
 def WinGetLn(winid: number, linenr: number, com: string): string
