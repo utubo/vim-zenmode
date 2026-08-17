@@ -157,9 +157,9 @@ def CursorMoved()
   endif
 enddef
 def OnSign()
-   if CheckTextoff()
-      RedrawNow()
-   endif
+  if CheckTextoff()
+    RedrawNow()
+  endif
 enddef
 
 def OnCmdlineEnter()
